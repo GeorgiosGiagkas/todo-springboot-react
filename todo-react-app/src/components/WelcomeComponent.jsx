@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import HelloWorldService from '../api/HelloService.js';
+import HelloService from '../api/HelloService.js';
+import AuthenticationService from '../components/AuthenticationService.js';
 
 class WelcomeComponent extends Component{
     constructor(params) {
         super(params);
 
         this.state = {
-            welcomeMessage:''
+            welcomeMessage:'',
+            loggedInUser : AuthenticationService.getLoggedInUserName()
         }
 
         this.retrieveWelcomeMessage = this.retrieveWelcomeMessage.bind(this);
@@ -16,7 +18,7 @@ class WelcomeComponent extends Component{
     }
 
     retrieveWelcomeMessage(){
-        HelloWorldService.executeHelloWorldBeanService(this.props.match.params.name)
+        HelloService.executeHelloService(this.state.loggedInUser)
         .then(res=>{            
             this.handleSuccessfulResponse(res.data.message)            
         })
@@ -49,7 +51,7 @@ class WelcomeComponent extends Component{
             <>
                 <h1>Welcome</h1>
                 <div className="container">
-                    Welcome {this.props.match.params.name}. Manage your Todo List <Link to="/todos">here</Link>            
+                    Welcome {this.state.loggedInUser}. Manage your Todo List <Link to="/todos">here</Link>            
                 </div>
                 <div className="container">
                     Click here to get a customized welcome message.
